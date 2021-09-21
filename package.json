@@ -1,0 +1,19 @@
+{
+  "name": "internet-finder",
+  "version": "1.0.0",
+  "description": "",
+  "main": "main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ShyVaporeon/Internet-Finder.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ShyVaporeon/Internet-Finder/issues"
+  },
+  "homepage": "https://github.com/ShyVaporeon/Internet-Finder#readme"
+}
