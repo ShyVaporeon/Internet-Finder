@@ -1,11 +1,11 @@
 const puppeteer = require('puppeteer');
-//const $ = require('cheerio');
+const $ = require('cheerio');
 
-// const url = 'https://www.amazon.com/Sony-Noise-Cancelling-Headphones-WH1000XM3/dp/B07G4MNFS1/';
+const url = 'https://www.amazon.com/Sony-Noise-Cancelling-Headphones-WH1000XM3/dp/B07G4MNFS1/';
 
-async function Start_Browser() {
+async function configureBrowser() {
 	    const browser = await puppeteer.launch();
-
+	    const page = await browser.newPage();
+	    await page.goto(url);
+	    return page;
 }
-
-Start_Browser();
