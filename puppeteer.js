@@ -1,11 +1,31 @@
 const puppeteer = require('puppeteer');
-const $ = require('cheerio');
 
-const url = 'https://www.amazon.com/Sony-Noise-Cancelling-Headphones-WH1000XM3/dp/B07G4MNFS1/';
 
-async function configureBrowser() {
-	    const browser = await puppeteer.launch();
-	    const page = await browser.newPage();
-	    await page.goto(url);
-	    return page;
+async function Start_Browser() {
+	const browser = await puppeteer.launch({
+		headless: false,
+		defaultViewport: null
+	});
+
+	const page = await browser.newPage();
+	
+	const url = "https://giris.turktelekomwifi.com/#/welcomeAdsl";
+
+	await page.goto(url,{
+		waitUntil: "domcontentloaded"
+	});	
+
+	const quota_remainging = ".table tbody tr td:first-child"
+	const quota_total = ".table tbody tr td:nth-child(2)"
+	await page.waitForSelector(quota_total, {
+		visible: true,
+	  });
+
+
+	const Message1 =  await page.$eval(quota_total, result => result.textContent);
+	const Message2 =  await page.$eval(quota_remainging, result => result.textContent);
+	console.log("Quota: "+Message1);
+	console.log("Remaining: "+Message2);
 }
+
+Start_Browser();

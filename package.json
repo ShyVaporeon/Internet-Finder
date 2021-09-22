@@ -15,5 +15,8 @@
   "bugs": {
     "url": "https://github.com/ShyVaporeon/Internet-Finder/issues"
   },
-  "homepage": "https://github.com/ShyVaporeon/Internet-Finder#readme"
+  "homepage": "https://github.com/ShyVaporeon/Internet-Finder#readme",
+  "dependencies": {
+    "puppeteer": "^10.4.0"
+  }
 }
