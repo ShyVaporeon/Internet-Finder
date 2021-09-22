@@ -1,23 +1,11 @@
-const puppeteer = require("puppeteer");
-const $ = require("cheerio");
+const puppeteer = require('puppeteer');
+//const $ = require('cheerio');
 
-const url = "https://giris.turktelekomwifi.com/#/welcomeAdsl";
+// const url = 'https://www.amazon.com/Sony-Noise-Cancelling-Headphones-WH1000XM3/dp/B07G4MNFS1/';
 
-async function configureBrowser() {
-	const browser = await puppeteer.launch();
-	const page = await browser.newPage();
-	await page.goto(url);
-	return page;
+async function Start_Browser() {
+	    const browser = await puppeteer.launch();
+
 }
 
-async function checkPrice() {
-	await page.reload();
-	let html = await page.evaluate(() => document.body.innerHTML);
-	console.log(html);
-}
-
-async function monitor() {
-	let page = await configureBrowser();
-	await checkPrice(page);
-}
-monitor();
+Start_Browser();
