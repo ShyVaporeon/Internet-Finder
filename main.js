@@ -1,15 +1,15 @@
 const puppeteer = require('puppeteer');
 
 // skips first two numbers
-var user = 2110337;
+var user = 2110370;
 var howManyTrys = 500;
 
 var accountFound = false;
 const url = "https://giris.turktelekomwifi.com/#/login/adsl";
 
 const TTMusteri_Button = "#accordingMenuButton";
-const Internet_Button = "#according-menu > button:nth-child(1)"
-const InternetGiris_Button = "#adslBtn"
+const Internet_Button = "#according-menu > button:nth-child(1)";
+const InternetGiris_Button = "#adslBtn";
 
 const checkBox = 'input[name="termsCheckBox"]';
 const userName_InputField = "#adslUsername";
@@ -17,7 +17,7 @@ const password_InputField = 'input[name="password"]';
 const login_Button = "#loginBtn:not([disabled])";
 
 const exitButton = "a[data-autamation=\"cikis\"]";
-const tableContent = "td.alert-link"
+const tableContent = "td.alert-link";
 
 async function findInternet(){
 
