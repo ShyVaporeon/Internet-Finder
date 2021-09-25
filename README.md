@@ -15,6 +15,8 @@ Dependencies can be installed with "npm install <package name>"
 - puppeteer
 - fs
 
+## Side Note:
+(in main.js, a variable named user can be changed to adjust the starting point)
 	
 ## Known Bugs:
 - first two numbers of user variable is skipped
