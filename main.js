@@ -1,9 +1,5 @@
 const puppeteer = require("puppeteer");
 const fs = require("fs");
-// Developer Notes
-	//Known Bugs:
-		// skips first two numbers
-		// skips every first number after successfull login
 
 var user = 2110000;
 var howManyTrys = 1000;

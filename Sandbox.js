@@ -5,7 +5,7 @@ const fs = require("fs");
 		// skips first two numbers
 		// skips every first number after successfull login
 
-var user = 2113608;
+var user = 2113604;
 var howManyTrys = 1000;
 
 var accountFound = false;
