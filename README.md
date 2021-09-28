@@ -16,8 +16,8 @@ You also need to install two dependencies:
 Dependencies can be installed with "npm install \<package name\>"
 
 ## Side Note:
-in main.js, a variable named user can be changed to adjust the starting point
+In main.js, a variable named user can be changed to adjust the starting point
 	
 ## Known Bugs:
-- first two numbers of user variable is skipped
-- every first user number after successfull login is skipped
+- First two numbers of user variable is skipped
+- [Fixed] Every first user number after successfull login is skipped
