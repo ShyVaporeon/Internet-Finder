@@ -21,3 +21,4 @@ In main.js, a variable named user can be changed to adjust the starting point
 ## Known Bugs:
 - First two numbers of user variable is skipped
 - [Fixed] Every first user number after successfull login is skipped
+- [Fixed] When an account doesnt have any internet available app crashes
