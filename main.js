@@ -1,7 +1,7 @@
 const puppeteer = require("puppeteer");
 const fs = require("fs");
 
-var user = 2115236;
+var user = 2110000;
 var howManyTrys = 300;
 
 var browser = null;
@@ -108,6 +108,7 @@ async function fillForm(page){
 		try {
 		    await page.waitForSelector(login_Button,{timeout:15000});
 		    await page.click(login_Button);
+
 		} catch (error) {
 			console.log("Account found!");
 			fs.appendFile(`${__dirname}\\Accounts.txt`, `\n${user}`, err => {})
@@ -137,7 +138,10 @@ async function showQuota(page) {
     });
 	console.log(table);
 	fs.appendFile(`${__dirname}\\Accounts.txt`, `\n${table}`, err => {});
-    } catch (error) {console.log("This account has no internet available\nExiting")}
+	
+    } catch (error) {
+		console.log("This account has no internet available\nExiting")
+	}
 
 }
 
